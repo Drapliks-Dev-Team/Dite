@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drapliks | Developer</title>
+    
+    <!-- Import JetBrains Mono for the coding aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1a1a1a;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent: #8e8e8e; /* The requested grey */
+            --accent-hover: #b0b0b0;
+            --font-stack: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        /* Scanline effect wrapper */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Typography & Header */
+        h1, h2, h3 {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 1.5rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.5rem;
+            background-color: var(--accent);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: ">> ";
+            margin-right: 10px;
+            color: #fff;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: #fff;
+            background: rgba(142, 142, 142, 0.2);
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            font-size: 0.8rem;
+            border: 1px solid var(--accent);
+            padding: 2px 8px;
+            color: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* Skills Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-left: 3px solid var(--accent);
+            padding: 1.25rem;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+            background-color: #222;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* Link Buttons */
+        .link-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-main);
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: var(--accent);
+            z-index: -1;
+            transition: width 0.3s ease;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            color: #121212; /* Dark text on grey background for contrast */
+            font-weight: 700;
+        }
+
+        .btn span:last-child {
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header Section -->
+        <header>
+            <div class="terminal-prompt">user@drapliks:~ $ ./Dite</div>
+            <h1>Drapliks<span class="cursor"></span></h1>
+            <p class="tagline">C# Unity Developer & Linux Enthusiast.</p>
+        </header>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2 class="section-title">whoami</h2>
+            <p>
+                I am a 13-year-old developer passionate about coding and technology. 
+                My workflow bridges the gap between <span class="highlight">Arch Linux (BTW)</span> and Windows.
+            </p>
+            <p>
+                My main focus is <strong>Game Development</strong>, but I love tinkering with system configurations to create the perfect environment.
+            </p>
+            <div class="tags">
+                <span class="tag">Anime</span>
+                <span class="tag">Computer Games</span>
+                <span class="tag">Ricing</span>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <h2 class="section-title">tech_stack</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>C# (Unity)</h3>
+                    <p>Primary focus. Developing 2D and 3D games and interactive experiences.</p>
+                </div>
+                <div class="card">
+                    <h3>Python</h3>
+                    <p>System programming. Building applications that interact directly with the Linux kernel.</p>
+                </div>
+                <div class="card">
+                    <h3>Shell Scripting</h3>
+                    <p>Automation. Writing installation scripts and workflow automations.</p>
+                </div>
+                <div class="card">
+                    <h3>Dotfiles</h3>
+                    <p>Customizing Hyprland and Sway window managers for optimal aesthetics and efficiency.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Links Section -->
+        <section id="links">
+            <h2 class="section-title">connect</h2>
+            <div class="link-container">
+                <a href="https://t.me/devoloperdrapliks" target="_blank" class="btn">
+                    <span>Telegram</span>
+                    <span>@devoloperdrapliks</span>
+                </a>
+                <a href="https://github.com/Drapliks" target="_blank" class="btn">
+                    <span>GitHub</span>
+                    <span>git check</span>
+                </a>
+                <a href="https://drapliks.itch.io/" target="_blank" class="btn">
+                    <span>Itch.io</span>
+                    <span>play_games</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>echo "Made by Drapliks" | 2026</p>
+            <p style="margin-top:5px; font-size: 0.75rem; color: #555;">(I use Arch btw)</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
